@@ -99,7 +99,7 @@ class AddressViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.De
     def update(self, request, *args, **kwargs):
         obj = self.get_object()
         obj.user.default_address_id = obj.id
-
-        return Response()
+        obj.user.save()
+        return Response(self.get_serializer(obj).data)
 
 
