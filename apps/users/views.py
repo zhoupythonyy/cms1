@@ -100,6 +100,6 @@ class AddressViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.De
         obj = self.get_object()
         obj.user.default_address_id = obj.id
 
-        return super().update(request, *args, **kwargs)
+        return Response()
 
 
