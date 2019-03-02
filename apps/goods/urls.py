@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from goods import views
+
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'goods/recommend/$', views.RecommendView.as_view()),
+    url(r'goods/detail/(?P<goods_id>\d+)/$', views.DetailView.as_view()),
 ]
