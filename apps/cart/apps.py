@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class CartConfig(AppConfig):
+class UserConfig(AppConfig):
     name = 'cart'
