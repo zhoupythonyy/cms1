@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import datetime
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 添加导包路径
@@ -116,6 +118,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # 配置项目支持的认证方式
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',  # jwt认证
+        'rest_framework.authentication.SessionAuthentication',			 # 管理后台使用
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+
+}
+
+# jwt认证配置
+JWT_AUTH = {    # 导包： import datetime
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  	# jwt有效时间
+    # 修改登录成功接口返回的响应参数， 新增 user_id 和 username两个字段
+    'JWT_RESPONSE_PAYLOAD_HANDLER': "users.utils.jwt_response_payload_handler",
+}
+
+AUTHENTICATION_BACKENDS = [
+    'users.utils.UsernameMobileAuthBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

@@ -11,7 +11,24 @@ var vm = new Vue({
 
     mounted: function(){
         // 请求当前登录用户的所有的地址
-       
+       axios.get(this.host + '/addresses/', {
+                headers: {
+                    'Authorization': 'JWT ' + this.token
+                }
+            })
+            .then(response => {
+                this.addresses = response.data.addresses;
+                this.limit = response.data.limit;
+                this.default_address_id = response.data.default_address_id;
+            })
+            .catch(error => {
+                status = error.response.status;
+                if (status == 401 || status == 403) {
+                    location.href = '/login.html?next=/user_center_address.html';
+                } else {
+                    alert(error.response.data);
+                }
+            })
     },
 
     methods: {
@@ -22,13 +39,33 @@ var vm = new Vue({
                 return
             }
 			//发送请求
-           
+            axios.put(this.host + "/addresses/" + this.default_address_id + "/",null, {
+                headers: {
+                    'Authorization': 'JWT ' + this.token
+                }})
+                .then(response => {
+                    alert("设置默认地址成功")
+                })
+                .catch(error => {
+                    alert("设置默认地址失败")
+                })
         },
 
         // 删除地址
         delete_address: function (address_id) {
             // 发送请求
-            
+            axios.delete(this.host + "/addresses/"　+ address_id + '/',{
+                headers: {
+                    'Authorization': 'JWT ' + this.token
+                }}
+            )
+                .then(response => {
+                    alert("删除地址成功");
+                    location.reload()
+                })
+                .catch(error => {
+                    alert("删除地址失败")
+                })
         }
     }
 });

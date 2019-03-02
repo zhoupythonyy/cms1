@@ -40,6 +40,19 @@ var vm = new Vue({
             } else {
                 this.error_name = false;
             }
+            // 检查用户名是否重复
+            axios.get('http://localhost:8000/usernames/'+ this.username + '/count/')
+                .then(response => {
+                    if (response.data.count > 0) {
+                        this.error_name_message = '用户名已存在';
+                        this.error_name = true;
+                    } else {
+                        this.error_name = false;
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response.data);
+                })
         },
 
         check_pwd: function () {
@@ -66,6 +79,7 @@ var vm = new Vue({
             } else {
                 this.error_phone = true;
             }
+
         },
 
         check_sms_code: function () {
@@ -91,7 +105,16 @@ var vm = new Vue({
 
             if (!this.error_phone) {
 				//发送获取请求
-				
+				axios.get('http://localhost:8000/sms_code/'+ this.mobile +'/')
+                    .then(response => {
+                         this.error_sms_code = false;
+                        alert('短信验证码发送成功')
+                    })
+                    .catch(error => {
+                        // 显示出错信息
+                        this.error_sms_code = true;
+                        this.error_sms_code_message = error.response.data.message;
+        })
             }
         },
 
@@ -103,6 +126,7 @@ var vm = new Vue({
             this.check_cpwd();
             this.check_phone();
             this.check_allow();
+            this.check_sms_code();
 
             if (this.error_name === false
                 && this.error_password === false
@@ -110,6 +134,39 @@ var vm = new Vue({
                 && this.error_phone === false
                 && this.error_allow === false) {
 				//发送注册请求
+                var data = {
+                    username: this.username,
+                    password: this.password,
+                    password2: this.password2,
+                    mobile: this.mobile,
+                    sms_code: this.sms_code,
+                    allow: this.allow
+                };
+                axios.post('http://localhost:8000/register/', data)
+                    .then(response => {
+                         // 清除之前保存的数据
+                        // 清除之前保存的数据
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        // 保存用户的登录状态数据
+                        localStorage.token = response.data.token;
+                        localStorage.username = response.data.username;
+                        localStorage.user_id = response.data.id;
+                        location.href = '/index.html';      // 跳转到首页
+                    })
+                    .catch(error => {
+                        if (error.response.status === 400) {
+                            if ('non_field_errors' in error.response.data) {
+                                this.error_sms_code = true;
+                                this.error_sms_code_message = error.response
+                                    .data.non_field_errors[0];
+                            } else {
+                                alert('注册失败')
+                            }
+                        } else {
+                            alert('注册失败')
+                        }
+			})
             } else {
                 alert('填写有误')
             }

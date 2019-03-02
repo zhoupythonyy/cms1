@@ -15,10 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
+from rest_framework_jwt.views import obtain_jwt_token
 
 from users import views
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
-    url(r'test/$', views.test),
+    url(r'^test/$', views.test),
+    url(r'^usernames/(?P<username>\w{5,20})/count/$', views.UsernameCountView.as_view()),
+    url(r'^register/$', views.CreateUserView.as_view()),
+    # url(r'^login/$', obtain_jwt_token),
+    url(r'^login/$', views.MyObtainJSONWebToken.as_view()),
 ]
+
+router = DefaultRouter()
+router.register(r'addresses', views.AddressViewSet, base_name='addresses')
+urlpatterns += router.urls
