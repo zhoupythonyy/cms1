@@ -4,7 +4,7 @@ var vm = new Vue({
         host: 'http://127.0.0.1:8000',
         goods: null,
         recommend_goods: null,
-
+        token: sessionStorage.token || localStorage.token,
         count: 1,            // 添加到购物车的商品数量
         goods_id: 0,         // 当前显示的商品id
     },
@@ -54,20 +54,20 @@ var vm = new Vue({
 				let data = {
                 good_id: parseInt(this.goods_id),
                 count: this.count
-            };
-            let config = {
-                headers: { // 通过请求头往服务器传递登录状态
-                    'Authorization': 'JWT ' + this.token
-                },
-            };
-            axios.post(this.host+'/cart/', data, config)
-                .then(response => {
-                    alert('添加购物车成功');
-                })
-                .catch(error => {
-                    alert('添加购物车失败');
-                    console.log(error.response.data);
-                })
+                };
+                let config = {
+                    headers: { // 通过请求头往服务器传递登录状态
+                        'Authorization': 'JWT ' + this.token
+                    },
+                };
+                axios.post(this.host+'/cart/', data, config)
+                    .then(response => {
+                        alert('添加购物车成功');
+                    })
+                    .catch(error => {
+                        alert('添加购物车失败');
+                        console.log(error.response.data);
+                    })
 			
                
             } else {

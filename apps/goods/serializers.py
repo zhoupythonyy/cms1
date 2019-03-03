@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from goods.models import Goods, GoodsAlbum, GoodsCategory
+from goods.models import Goods, GoodsCategory, GoodsAlbum
 
 
 class GoodsSerializers(serializers.ModelSerializer):
@@ -10,14 +10,27 @@ class GoodsSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SCategorySer(serializers.ModelSerializer):
+    class Meta:
+        model = GoodsCategory
+        fields = ('id', 'title')
+
+
+class CategorySer(serializers.ModelSerializer):
+    goodscategory_set = SCategorySer(many=True, read_only=True)
+
+    class Meta:
+        model = GoodsCategory
+        fields = ('id', 'title', 'goodscategory_set')
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoodsCategory
+        fields = '__all__'
+
+
 class GoodsAlbumSer(serializers.ModelSerializer):
     class Meta:
         model = GoodsAlbum
         fields = '__all__'
-
-
-class SCategorySer(serializers.ModelSerializer):
-    """商品类别"""
-    class Meta:
-        model = GoodsCategory
-        fields = ('id', 'title')

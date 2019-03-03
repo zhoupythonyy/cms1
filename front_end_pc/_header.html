@@ -46,14 +46,18 @@
 <script type="text/javascript" src="js/vue-2.5.16.js"></script>
 <script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
 <script type="text/javascript">
-    new Vue({
+    var hm = new Vue({
         el: '#menu',
         data: {
             username: sessionStorage.username || localStorage.username,
+            token: sessionStorage.token || localStorage.token,
             total_count: 0
         },
         mounted: function(){
-            axios.get('http://127.0.0.1:8000/cart/count/')
+            axios.get('http://127.0.0.1:8000/cart/count/' , {
+                headers: {
+                    'Authorization': 'JWT ' + this.token
+                }})
                 .then(response => {
                     this.total_count = response.data.total_count;
                 })
