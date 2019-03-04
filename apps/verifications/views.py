@@ -1,12 +1,9 @@
 import random
-
-from django.shortcuts import render
-
-# Create your views here.
 from django_redis import get_redis_connection
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from celery_tasks.sms.tasks import send_sms_code
 from libs.yuntongxun.sms import CCP
 
 
@@ -30,9 +27,11 @@ class SMSCodeView(APIView):
         # 2. 校验短信验证码是否重复发送 设置60秒内禁止重复发送
         # 3. 生成和发送短信验证码  调用云通讯接口
         sms_code = "%06d" % random.randint(0, 999999)
-        print(sms_code)
+        print('短信验证码', sms_code)
 
         # CCP().send_template_sms(mobile, [sms_code, 5], 1)
+        # 通过celery发送短信
+        send_sms_code.delay(mobile, sms_code)
 
         # 4. 保存短信验证码redis数据库 -- setex 表示设置有效期的键值
         redis_conn.setex("sms_%s" % mobile, 5*60, sms_code)

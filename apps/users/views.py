@@ -1,7 +1,4 @@
-from gc import get_objects
-
 from django.http.response import HttpResponse
-from django.shortcuts import render
 from rest_framework import mixins
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
