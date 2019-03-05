@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 
 from utils.models import Category, BaseModel, Album
@@ -20,8 +21,8 @@ class Goods(BaseModel):
     title = models.CharField(max_length=100, verbose_name='商品名称')
     img_url = models.CharField(max_length=255, verbose_name='商品默认图片')
     zhaiyao = models.CharField(max_length=255, verbose_name='摘要')
-    # content = RichTextUploadingField(default='', verbose_name='商品详情')
-    content = models.TextField(default='', verbose_name='商品详情')
+    content = RichTextUploadingField(default='', verbose_name='商品详情')
+    # content = models.TextField(default='', verbose_name='商品详情')
     status = models.IntegerField(default=0, verbose_name='是否下线')
     is_red = models.IntegerField(default=0, verbose_name='是否推荐')
     is_slide = models.IntegerField(default=0, verbose_name='是否轮播商品')

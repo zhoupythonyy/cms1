@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'xadmin',
+    'crispy_forms',
+    'reversion',
+    'ckeditor',  			# 富文本编辑器
+    'ckeditor_uploader',  	# 富文本编辑器上传图片模块
     'users',
     'cart',
     'goods',
@@ -200,3 +205,13 @@ CACHES = {
 
 # 注册自定义的用户模型类
 AUTH_USER_MODEL = 'users.User'
+
+# 富文本编辑器ckeditor配置
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',  # 工具条功能
+        'height': 300,  	# 编辑器高度
+        # 'width': 300,    	# 编辑器宽
+    },
+}
+CKEDITOR_UPLOAD_PATH = 'upload/'
